@@ -1,6 +1,6 @@
 # Zabbix zbx_owncloud.yaml
 
-App Owncloud Monitoring API
+Zabbix Owncloud Monitoring API
 
 # Overview<br>
 Owncloud Monitoring API integration for Zabbix 6.4<br>
