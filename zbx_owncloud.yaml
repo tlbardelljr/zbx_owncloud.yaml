@@ -1,0 +1,185 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: 0cd9b5231d4b4675b43c6cd9129646fe
+      template: 'Owncloud 10.10.0'
+      name: 'Owncloud 10.10.0'
+      description: 'This template is designed to monitor Owncloud using HTTP via Zabbix, and it works without any external scripts. Owncloud is a suite of client-server software that creates and uses file hosting services.'
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: d6569122ae3543ada381ab5c14d5c212
+          name: 'Owncloud: Edition'
+          type: DEPENDENT
+          key: owncloud.edition
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.data.version.edition
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: 7d40e0ff68d04c91b90ea64a0bed8ee8
+          name: 'Owncloud: Hostname'
+          type: DEPENDENT
+          key: owncloud.hostname
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.data.capabilities.core.status.hostname
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: 57364c387eb342dfa9b0877974582494
+          name: 'Owncloud: Maintenance'
+          type: DEPENDENT
+          key: owncloud.maintenance
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.data.capabilities.core.status.maintenance
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+          triggers:
+            - uuid: 70ee835cb8a6407fa5f190dfc0ae9419
+              expression: 'last(/Owncloud 10.10.0/owncloud.maintenance)<>"false"'
+              name: 'Owncloud: Maintenance Enabled'
+              event_name: 'Owncloud: Maintenance Enabled'
+              priority: WARNING
+        - uuid: 5b6cf2fffc984c4d8e25bb18dffcc4b3
+          name: 'Owncloud: Needs Db Upgrade'
+          type: DEPENDENT
+          key: owncloud.needsDbUpgrade
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.data.capabilities.core.status.needsDbUpgrade
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: ec90f235fa1c4bfb8c2ffbcf030391bc
+          name: 'Owncloud: Product'
+          type: DEPENDENT
+          key: owncloud.product
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.data.version.product
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: 7cbb9e4e0d474f3db18306223ccea189
+          name: 'Owncloud: Status'
+          type: DEPENDENT
+          key: owncloud.status
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          valuemap:
+            name: Status
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.meta.status
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+          triggers:
+            - uuid: 46dedc756e4d4ff4ae1151cac2917686
+              expression: 'last(/Owncloud 10.10.0/owncloud.status)<>"ok"'
+              name: 'Owncloud: Status not ok'
+              event_name: 'Owncloud: Status not ok'
+              priority: DISASTER
+              manual_close: 'YES'
+        - uuid: f685ae6c9a3340d3af525d8a8d2d1201
+          name: 'Owncloud: Statuscode'
+          type: DEPENDENT
+          key: owncloud.statuscode
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          valuemap:
+            name: Status
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ocs.meta.statuscode
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: 1a1bf976ef51426384f39bbe1b02a93c
+          name: 'Owncloud: Webdav-root'
+          type: DEPENDENT
+          key: owncloud.webdav-root
+          delay: '0'
+          history: 1w
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.ocs.data.capabilities.core.["webdav-root"]'
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          master_item:
+            key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+        - uuid: 060de921b7724cd088b2805bee371105
+          name: 'Owncloud: Capabilities'
+          type: ZABBIX_ACTIVE
+          key: 'system.run["curl --silent -u {$OWNCLOUD.USER}:{$OWNCLOUD.PASS} ''{$OWNCLOUD.WEB}://{$OWNCLOUD.IP}/ocs/v1.php/cloud/capabilities?format=json''"]'
+          value_type: TEXT
+          trends: '0'
+      macros:
+        - macro: '{$OWNCLOUD.IP}'
+          description: 'IP Address or FQDN + /Folder path'
+        - macro: '{$OWNCLOUD.PASS}'
+          description: 'Password of account'
+        - macro: '{$OWNCLOUD.USER}'
+          description: 'Username of account'
+        - macro: '{$OWNCLOUD.WEB}'
+          value: https
+          description: 'Web protocol. Either "http" or "https"'
+      valuemaps:
+        - uuid: bba402ad6d5147e3bd9fb35ae26eb0b5
+          name: Status
+          mappings:
+            - value: ok
+              newvalue: '1'
