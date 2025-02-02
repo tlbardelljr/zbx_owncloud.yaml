@@ -30,7 +30,6 @@ Macros used
 {$OWNCLOUD.PASS}
 {$OWNCLOUD.USER}
 {$OWNCLOUD.WEB}
--
 
 Template links
 There are no template links in this template.
