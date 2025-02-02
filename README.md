@@ -15,21 +15,21 @@ You also need to allow the execution of the script in Zabbix Agent configuration
 Fully compatible with Owncloud version 10.10.0.
 
 Shows different operating values of your Nextcloud server:
-
-Owncloud: Edition
-Owncloud: Hostname
-Owncloud: Maintenance
-Owncloud: Needs Db Upgrade
-Owncloud: Product
-Owncloud: Status
-Owncloud: Statuscode
-Owncloud: Webdav-root
-
-Macros used
-{$OWNCLOUD.IP}
-{$OWNCLOUD.PASS}
-{$OWNCLOUD.USER}
-{$OWNCLOUD.WEB}
+<br>
+Owncloud: Edition<br>
+Owncloud: Hostname<br>
+Owncloud: Maintenance<br>
+Owncloud: Needs Db Upgrade<br>
+Owncloud: Product<br>
+Owncloud: Status<br>
+Owncloud: Statuscode<br>
+Owncloud: Webdav-root<br>
+<br>
+# Macros used<br>
+{$OWNCLOUD.IP}<br>
+{$OWNCLOUD.PASS}<br>
+{$OWNCLOUD.USER}<br>
+{$OWNCLOUD.WEB}<br>
 
 Template links
 There are no template links in this template.
